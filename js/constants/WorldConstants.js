@@ -1,0 +1,9 @@
+window.world={
+    cameraX:300,
+    cameraY:0,
+    width:640,
+    height:320,
+    tileWidth:32,
+    tileHeight:32,
+    gravity:4
+}

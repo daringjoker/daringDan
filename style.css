@@ -1,0 +1,14 @@
+*{
+    margin:0px;
+    padding:0px;
+    box-sizing:border-box;
+}
+
+.gamewrapper{
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    width:100vw;
+    height:100vh;
+    background:#c9c9c9;
+}
