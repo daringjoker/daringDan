@@ -1,8 +1,7 @@
 class Collectible{    
     constructor(type,x,y){
          this.type=type;
-         this.spriteSheet=new Image();
-         this.spriteSheet.src="assets/items.png";
+         this.spriteSheet=getAsset("items.png");
          this.animator=new Animator(this.spriteSheet);
          this.animator.switchFrameSet("idle");
          this.animator.defaultDelay=3;
@@ -41,9 +40,11 @@ class Collectible{
         let fr=this.animator.getRenderFrame();
         this.width=fr.width;
         this.height=fr.height;
+        if(Math.abs(this.oldY-this.y)>34)
         this.oldY=this.y;
         this.oldX=this.x;
         this.velY+=this.gravity;
+        this.velY=Math.max(-30,this.velY);
         this.y+=this.velY;
         this.screenX=this.x-world.cameraX;
         this.screenY=this.y-world.cameraY;

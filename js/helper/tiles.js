@@ -5,15 +5,14 @@ class Tiles{
         this.tileHeight=64;
         this.totalWidth=80;
         this.totalHeight=10;
-        this.tileSet=new Image();
+        this.tileSet= getAsset("tileset.png");
         this.enemyPos=[];
-        this.tileSet.src="assets/tileset.png";
-        fetch(filePath).then(data=>data.json())
-        .then(data=>{
+        let data=getAsset(filePath);
             this.totalHeight=data.height;
             this.totalWidth=data.width;
-            this.map=Array.from(data.layers[1].data);
-            data.layers[0].data.forEach((item,index)=>{
+            let tileIndex=(data.layers[0].name.includes("enemy"))?1:0;
+            this.map=Array.from(data.layers[tileIndex].data);
+            data.layers[1-tileIndex].data.forEach((item,index)=>{
                 if(item!==0){
                     if(item>322)item-=322;
                     let x=(index%this.totalWidth)*world.tileWidth;
@@ -25,7 +24,7 @@ class Tiles{
                     });
                 }
             })
-        })
+        
     }
     
     render(){
@@ -91,22 +90,24 @@ class Tiles{
                             // console.log(gameObject.spriteSheet.src);                        
                             if(gameObject.y+gameObject.height/2>tileRect.y&&gameObject.oldY+gameObject.height/2<tileRect.y){
                                 gameObject.y=tileRect.y-gameObject.height/2-1;
+                                // gameObject.oldY=gameObject.y-world.tileHeight-1;
                                 gameObject.velY=0;
                                 gameObject.land();
                             }
                             else if(gameObject.y-gameObject.height/2<tileRect.y+tileRect.height&&gameObject.oldY-gameObject.height/2>tileRect.y+tileRect.height){
                                 gameObject.y=tileRect.y+tileRect.height+gameObject.height/2+1;
+                                // gameObject.oldY=gameObject.y+world.tileHeight+1;
                                 gameObject.velY=0;
                             }
                         }
                                               
                         objRect=gameObject.getFullRect();
                         if(rectsCollide(tileRect,objRect)){
-                            if(gameObject.x+gameObject.width/2>tileRect.x&&gameObject.oldX+gameObject.width/2<tileRect.x){
+                            if(gameObject.oldX<gameObject.x){
                                 gameObject.x=tileRect.x-gameObject.width/2-1;
                                 gameObject.stopRunning();
                             }
-                            else if(gameObject.x-gameObject.width/2<tileRect.x+tileRect.width&&gameObject.oldX-gameObject.width/2>tileRect.x+tileRect.width){
+                            else if(gameObject.oldX>gameObject.x){
                                 gameObject.x=tileRect.x+tileRect.width+gameObject.width/2+1;
                                 gameObject.stopRunning();
                             }

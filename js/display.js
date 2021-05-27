@@ -69,11 +69,16 @@ class Display{
     }
 
     drawSprite(spriteSheet,sourceX,sourceY,sourceWidth,sourceHeight,targetX,targetY,targetWidth,targetHeight){
-        this.buffer.drawImage(
-            spriteSheet,
-            sourceX,sourceY,sourceWidth,sourceHeight,
-            targetX,targetY,targetWidth,targetHeight
-        );
+        try {
+            this.buffer.drawImage(
+                spriteSheet,
+                sourceX,sourceY,sourceWidth,sourceHeight,
+                targetX,targetY,targetWidth,targetHeight
+            ); 
+        } catch (error) {
+            console.log(spriteSheet)
+        }
+       
 
     }
 
@@ -106,6 +111,7 @@ class Display{
     }
 
     render(){
+        this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
         this.ctx.drawImage(this.buffer.canvas,
              0, 0, this.buffer.canvas.width, this.buffer.canvas.height,
              0, 0, this.ctx.canvas.width, this.ctx.canvas.height);

@@ -2,13 +2,14 @@ class enemy{
     constructor(spawnX,spawnY,player=null,type=1){
         this.player=player;
         this.originalX=spawnX;
+        this.originalY=spawnY;
         this.roamingCoeff=80;
         this.x=spawnX;
         this.y=spawnY;
-        this.oldX=spawnX+1;
+        this.oldX=spawnX;
         this.oldY=spawnY;
-        this.screenX=spawnX;
-        this.screenY=spawnY;
+        this.screenX=spawnX-window.world.cameraX;
+        this.screenY=spawnY-window.world.cameraY;
         this.width=40;
         this.height=70;
         this.velX=0;
@@ -26,24 +27,29 @@ class enemy{
         this.lastAnimationLoop=true;
         this.lastHitTime=performance.now()+Math.random()*2000;
         this.idleSince=performance.now()+Math.random()*2000;
-        this.spriteSheet=new Image();
-        this.animator=new Animator(this.spriteSheet);
         switch(type){
             case 1:{
-                this.spriteSheet.src="assets/simpleEnemy.png";
+                this.spriteSheet=getAsset("simpleEnemy.png");
+                this.animator=new Animator(this.spriteSheet);
                 this.animator.getFrom("assets/simpleEnemy.json");
                 this.damage=5;
                 break;
             }
             case 2:{
-                this.spriteSheet.src="assets/cyberDog.png";
+                this.spriteSheet=getAsset("cyberDog.png");
+                this.animator=new Animator(this.spriteSheet);
                 this.animator.getFrom("assets/cyberDog.json");
+                this.animator.defaultDelay=2;
+                this.animator.animationDelay=2;
+                this.xVelDelta=6;
                 this.damage=10;
                 this.height=35;
+                this.width=60;
                 break;
             }
             case 3:{
-                this.spriteSheet.src="assets/shield.png";
+                this.spriteSheet=getAsset("shield.png");
+                this.animator=new Animator(this.spriteSheet);
                 this.animator.getFrom("assets/shield.json");
                 this.damage=20;
                 this.animator.defaultDelay=5;
@@ -72,12 +78,12 @@ class enemy{
         let height=fr.height;
         let width;
         if(this.facingRight){
-            x=this.x+0.3*fr.width;
-            width=fr.width*0.4;
+            x=this.x-0.3*fr.width;
+            width=fr.width*0.8;
         }
         else{
             x=this.x-fr.width*0.5;
-            width=fr.width*0.2;
+            width=fr.width*0.8;
         }
         return{
             x,
@@ -93,12 +99,12 @@ class enemy{
         let height=fr.height;
         let width;
         if(this.facingRight){
-            x=this.x-0.3*fr.width;
-            width=fr.width*0.8;
+            x=this.x-0.1*fr.width;
+            width=fr.width*0.6;
         }
         else{
             x=this.x-fr.width*0.5;
-            width=fr.width*0.8;
+            width=fr.width*0.6;
         }
         return{
             x,
@@ -110,6 +116,10 @@ class enemy{
     }
 
     update(){
+        if(this.y!==this.originalY&&this.status==="walking"){
+            this.originalX=this.facingRight?this.x+this.roamingCoeff:this.x-this.roamingCoeff;
+            this.originalY=this.y;
+        }
         if(!this.dying){
             this.AI();
             this.animator.update();
@@ -117,6 +127,7 @@ class enemy{
             if(Math.abs(this.velY)>32)this.velY=32*(this.velY/Math.abs(this.velY));
             this.velY+=window.world.gravity;
             this.oldX=this.x;
+            if(Math.abs(this.oldY-this.y)>34)
             this.oldY=this.y;
             this.x+=this.velX;
             this.y+=this.velY;
@@ -133,8 +144,8 @@ class enemy{
         if(this.screenY>window.world.height-1) this.dead=true;
     }
     AI(){
-        if(distance(this.player,this)<60){
-            if(distance(this.player,this)<(this.width/2+this.player.width/2))
+        if(distance(this.player,this)<this.animator.getRenderFrame().width/2+40){
+            if(distance(this.player,this)<(this.animator.getRenderFrame().width/2+this.player.width/2))
             {
                if(!this.punching&&this.status!=="iamhit")
                 {   

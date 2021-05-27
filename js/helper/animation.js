@@ -15,13 +15,11 @@ class Animator{
         this.animationCompleteCallback=null;
     }
     getFrom(url){
-        fetch(url).then(data=>data.json())
-        .then(data=>{
+        let data=getAsset(url);
             Object.keys(data).forEach((key,index)=>{
                 let arr=data[key].map(fr=>this.addFrame(new Frame(fr.x,fr.y,fr.width,fr.height,fr.offX||0,fr.offY||0)));
                 this.addFrameSet(key,arr);
              })
-        })
     }
 
     onAnimationComplete(callback)

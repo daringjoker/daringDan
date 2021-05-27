@@ -24,12 +24,12 @@ class player{
         this.facingRight=true;
         this.lastAnimation=null;
         this.lastAnimationLoop=true;
-        this.spriteSheet=new Image();
-        this.spriteSheet.src="assets/dan.png";
+        this.spriteSheet=getAsset("dan.png");
         this.animator=new Animator(this.spriteSheet);
         this.animator.getFrom("assets/dan.json");
         this.animator.switchFrameSet("idle",this.facingRight);
         this.animator.defaultFrameSet="idle";
+        this.attackCounted=false;
         this.animator.onAnimationComplete(this.singleAnimationComplete.bind(this))
     }
     getFullRect(){
@@ -88,6 +88,7 @@ class player{
         if(Math.abs(this.velY)>35)this.velY=35*(this.velY/Math.abs(this.velY));
         this.velY+=window.world.gravity;
         this.oldX=this.x;
+        if(Math.abs(this.oldY-this.y)>34)
         this.oldY=this.y;
         this.x+=this.velX;
         this.y+=this.velY;
@@ -148,7 +149,7 @@ class player{
     kick(){
         if(!this.kicking&&!this.punching){        
             let selectedKick=randomChoice(this.kicks);
-            {
+            {       this.attackCounted=false;
                     this.kicking=true;
                     this.lastAnimation=this.animator.currentFrameSet;
                     this.lastAnimationLoop=this.animator.currentFrameSetLoop;
@@ -162,7 +163,8 @@ class player{
     punch(){
         if(!this.kicking&&!this.punching){
             let selectedPunch=randomChoice(this.punches);
-            {
+            {   
+                this.attackCounted=false;
                 this.punching=true;
                 this.lastAnimation=this.animator.currentFrameSet;
                 this.lastAnimationLoop=this.animator.currentFrameSetLoop;
