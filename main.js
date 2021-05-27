@@ -8,7 +8,7 @@ let menu;
 function init(){
     if(incomplete_assets>0){
         setTimeout(init,333);
-        if(!menu)menu=new Menu();
+        if(menu===undefined)menu=new Menu();
     }else
     {
         menu.quit();
