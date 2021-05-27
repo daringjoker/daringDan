@@ -6,12 +6,25 @@ class Tiles{
         this.totalWidth=80;
         this.totalHeight=10;
         this.tileSet=new Image();
+        this.enemyPos=[];
         this.tileSet.src="assets/tileset.png";
         fetch(filePath).then(data=>data.json())
         .then(data=>{
             this.totalHeight=data.height;
             this.totalWidth=data.width;
-            this.map=Array.from(data.layers[0].data);
+            this.map=Array.from(data.layers[1].data);
+            data.layers[0].data.forEach((item,index)=>{
+                if(item!==0){
+                    if(item>322)item-=322;
+                    let x=(index%this.totalWidth)*world.tileWidth;
+                    let y=(Math.floor(index/this.totalWidth))*world.tileHeight;
+                    this.enemyPos.push({
+                        x:x+world.tileWidth/2,
+                        y:y-35,
+                        type:item
+                    });
+                }
+            })
         })
     }
     
@@ -55,13 +68,13 @@ class Tiles{
     }
 
     collision(gameObjects){
-        let startX=Math.floor(world.cameraX/world.tileWidth)*world.tileWidth-world.width/2;
+        let startX=Math.floor(world.cameraX/world.tileWidth)*world.tileWidth-world.width/4;
         let startY=Math.floor(world.cameraY/world.tileHeight)*world.tileHeight;
         let yOffset=startY;
         for(let y=startY/world.tileWidth;yOffset<world.cameraY+world.height;y++)
         {
             let xOffset=startX;
-            for(let x=startX/world.tileWidth;xOffset<world.cameraX+world.width+world.width/2;x++)
+            for(let x=startX/world.tileWidth;xOffset<world.cameraX+world.width+world.width/4;x++)
             {
                 let tileIndex=this.map[y*this.totalWidth+x];
                 if(tileIndex!==0){
@@ -71,9 +84,11 @@ class Tiles{
                             y:yOffset,
                             width:world.tileWidth,
                             height:world.tileHeight
-                        }                        
+                        }
                         let objRect=gameObject.getFullRect();
+                        // if(gameObject.spriteSheet.src.includes("item"))console.log(objRect);
                         if(rectsCollide(tileRect,objRect)){
+                            // console.log(gameObject.spriteSheet.src);                        
                             if(gameObject.y+gameObject.height/2>tileRect.y&&gameObject.oldY+gameObject.height/2<tileRect.y){
                                 gameObject.y=tileRect.y-gameObject.height/2-1;
                                 gameObject.velY=0;

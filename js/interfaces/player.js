@@ -15,8 +15,9 @@ class player{
         this.damage=8;
         this.jumping=false;
         this.shooting=false;
-        this.weapons=[0,10];
-        this.currentWeapon=2;
+        this.score=parseInt(localStorage.getItem("daringDan-score")||0);
+        this.weapons=[0,10,5];
+        this.currentWeapon=1;
         this.kicks=["kick","push-kick","round-kick","low-kick","high-kick"]
         this.punches=["punch","super-punch","right-punch","right-super-punch","hook-punch","jab-punch"]
         this.status="idle";
@@ -84,10 +85,10 @@ class player{
     update(){
         this.animator.update();
         if(Math.abs(this.velX)>10)this.velX=10*(this.velX/Math.abs(this.velX));
-        if(Math.abs(this.velY)>32)this.velY=32*(this.velY/Math.abs(this.velY));
+        if(Math.abs(this.velY)>30)this.velY=30*(this.velY/Math.abs(this.velY));
         this.velY+=window.world.gravity;
-        this.oldX=this.x;
-        this.oldY=this.y;
+        if(this.oldX!==this.x) this.oldX=this.x;
+        if(this.oldY!==this.y)this.oldY=this.y;
         this.x+=this.velX;
         this.y+=this.velY;
         this.screenX=this.x-world.cameraX;
@@ -171,8 +172,13 @@ class player{
             }
         }
     }
+    switchWeapon(){
+        this.currentWeapon=(this.currentWeapon+1)%this.weapons.length;
+        if(this.currentWeapon==0)this.currentWeapon=1;
+    }
     shoot(){
         if(!this.kicking&&!this.punching&&!this.shooting){
+            if(this.currentWeapon!==0&&this.weapons[this.currentWeapon]>0){
             this.shooting=true;
             new projectile(this.currentWeapon,this.x,this.y,(this.facingRight?20:-20));
             this.lastAnimation=this.animator.currentFrameSet;
@@ -180,6 +186,9 @@ class player{
             this.animator.switchFrameSet("throw",this.facingRight);
             this.animator.animationDelay=2;
             this.animator.currentFrameSetLoop=false;
+            this.weapons[this.currentWeapon]--;
+            if(this.weapons[this.currentWeapon]==0)this.switchWeapon();
+            }
         }
     }
     singleAnimationComplete(){

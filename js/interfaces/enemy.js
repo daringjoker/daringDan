@@ -1,5 +1,5 @@
 class enemy{    
-    constructor(spawnX,spawnY,player=null){
+    constructor(spawnX,spawnY,player=null,type=1){
         this.player=player;
         this.originalX=spawnX;
         this.roamingCoeff=80;
@@ -27,13 +27,34 @@ class enemy{
         this.lastHitTime=performance.now()+Math.random()*2000;
         this.idleSince=performance.now()+Math.random()*2000;
         this.spriteSheet=new Image();
-        this.spriteSheet.src="assets/simpleEnemy.png";
         this.animator=new Animator(this.spriteSheet);
-        this.animator.getFrom("assets/simpleEnemy.json");
+        switch(type){
+            case 1:{
+                this.spriteSheet.src="assets/simpleEnemy.png";
+                this.animator.getFrom("assets/simpleEnemy.json");
+                this.damage=5;
+                break;
+            }
+            case 2:{
+                this.spriteSheet.src="assets/cyberDog.png";
+                this.animator.getFrom("assets/cyberDog.json");
+                this.damage=10;
+                this.height=35;
+                break;
+            }
+            case 3:{
+                this.spriteSheet.src="assets/shield.png";
+                this.animator.getFrom("assets/shield.json");
+                this.damage=20;
+                this.animator.defaultDelay=5;
+                this.animator.animationDelay=5;
+                this.height=90;
+                break;
+            }
+        }
         this.animator.switchFrameSet("idle",this.facingRight);
         this.animator.defaultFrameSet="idle";
         this.animator.onAnimationComplete(this.singleAnimationComplete.bind(this));
-        // this.timeoutRef=setTimeout(this.moveLeft.bind(this),2000+Math.random()*2000);
     }
     getFullRect(){
         return {
@@ -52,7 +73,7 @@ class enemy{
         let width;
         if(this.facingRight){
             x=this.x+0.3*fr.width;
-            width=fr.width*0.2;
+            width=fr.width*0.4;
         }
         else{
             x=this.x-fr.width*0.5;
@@ -72,12 +93,12 @@ class enemy{
         let height=fr.height;
         let width;
         if(this.facingRight){
-            x=this.x+0.5*fr.width;
-            width=fr.width*0.2;
+            x=this.x-0.3*fr.width;
+            width=fr.width*0.8;
         }
         else{
-            x=this.x-fr.width*0.7;
-            width=fr.width*0.2;
+            x=this.x-fr.width*0.5;
+            width=fr.width*0.8;
         }
         return{
             x,
@@ -113,7 +134,7 @@ class enemy{
     }
     AI(){
         if(distance(this.player,this)<60){
-            if(distance(this.player,this)<(this.width/2+this.player.width/2+25))
+            if(distance(this.player,this)<(this.width/2+this.player.width/2))
             {
                if(!this.punching&&this.status!=="iamhit")
                 {   
