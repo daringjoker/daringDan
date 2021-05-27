@@ -85,10 +85,10 @@ class player{
     update(){
         this.animator.update();
         if(Math.abs(this.velX)>10)this.velX=10*(this.velX/Math.abs(this.velX));
-        if(Math.abs(this.velY)>30)this.velY=30*(this.velY/Math.abs(this.velY));
+        if(Math.abs(this.velY)>35)this.velY=35*(this.velY/Math.abs(this.velY));
         this.velY+=window.world.gravity;
-        if(this.oldX!==this.x) this.oldX=this.x;
-        if(this.oldY!==this.y)this.oldY=this.y;
+        this.oldX=this.x;
+        this.oldY=this.y;
         this.x+=this.velX;
         this.y+=this.velY;
         this.screenX=this.x-world.cameraX;
