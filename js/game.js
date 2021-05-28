@@ -166,7 +166,7 @@ class Game{
 
     levelComplte(){
         console.log("i am trying",this.playing)
-        if(parseInt(localStorage.getItem("daringDan-cleared")||0)<this.level)
+        if(parseInt(localStorage.getItem("daringDan-cleared")||-1)<this.level)
         localStorage.setItem("daringDan-cleared",this.level);
         this.playing=false;
         game.playing=false;
