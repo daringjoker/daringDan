@@ -22,7 +22,7 @@ class Menu{
         this.history=["main"];
         this.gameMenuOptions={
             main:[this.firstMenu,"Levels","Controls","Settings"],
-            levels:["LEVEL 1","LEVEL 2","LEVEL 3"]
+            levels:["LEVEL 1","LEVEL 2","LEVEL 3","LEVEL 4"]
         }
         this.nextFrame();
         window.addEventListener("keydown",this.handleKey.bind(this));

@@ -36,6 +36,9 @@ class Controller{
                 case "1":
                     this.dan.switchWeapon();
                     break;
+                case "Escape":
+                    this.dan.health=-1;
+                    break;
             }
         }
     }
