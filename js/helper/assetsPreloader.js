@@ -1,4 +1,4 @@
-let assets=["cyberDog.json","ddlevel0.json","item10.json","item3.json","item7.json","proj1.json","shield.png","weapons.png","cyberDog.png","ddlevel1.json","item11.json","item4.json","item8.json","proj2.json","simpleEnemy.json","dan.json","hb.png","item12.json","item5.json","item9.json","projs.png","simpleEnemy.png","dan.png","item1.json","item2.json","item6.json","items.png","shield.json","tileset.png"]
+let assets=["menubg.png","ddlevel2.json","level0bg.png","level1bg.png","level2bg.png","cyberDog.json","ddlevel0.json","item10.json","item3.json","item7.json","proj1.json","shield.png","weapons.png","cyberDog.png","ddlevel1.json","item11.json","item4.json","item8.json","proj2.json","simpleEnemy.json","dan.json","hb.png","item12.json","item5.json","item9.json","projs.png","simpleEnemy.png","dan.png","item1.json","item2.json","item6.json","items.png","shield.json","tileset.png"]
 incomplete_assets=assets.length;
 processedAssets={}
 let loadAsset=asset=>{
@@ -14,6 +14,8 @@ let loadAsset=asset=>{
                 incomplete_assets--;
             });
             break;
+
+        case "jpg":
         case "png":
             let img=new Image()
             img.onload=e=>{
@@ -38,8 +40,6 @@ function getAsset(asset){
     let ret=processedAssets[asset.replace("assets/","")]
     if(ret===undefined){
         console.log("could not find",asset);
-        // incomplete_assets++;
-        // loadAsset(asset);
     }
     return ret;
 }

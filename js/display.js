@@ -105,6 +105,23 @@ class Display{
             this.buffer.restore();
         }
     }
+    drawText(text,x,y,font,size=30,fillColor="#000",strokeColor="#000",strokeWeight=0,align="left")
+    {
+        this.buffer.fillStyle=fillColor;
+        this.buffer.font=`${size}px ${font}`;
+        this.buffer.textAlign=align;
+        this.buffer.strokeStyle=strokeColor;
+        this.buffer.lineWidth=strokeWeight;
+        if(x<=1)x=Math.round(x*this.buffer.canvas.width);
+        if(y<=1)y=Math.round(y*this.buffer.canvas.height);
+        // console.log(x,y)
+        this.buffer.fillText(text,x,y);
+        if(strokeWeight>0)
+        this.buffer.strokeText(text,x,y);        
+    }
+    clear(){
+        this.buffer.clearRect(0,0,this.buffer.canvas.width,this.buffer.canvas.height);
+    }
 
     fillBackground(color="#000"){
         this.drawRect(0,0,this.buffer.canvas.width, this.buffer.canvas.height,color);

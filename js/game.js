@@ -1,13 +1,17 @@
 class Game{
-    constructor(){
+    constructor(level=0){
+        this.level=level;
+        this.playing=true;
         this.dan=new player(200,0);
-        this.ground=new Tiles("assets/ddlevel1.json");
+        this.ground=new Tiles(`assets/ddlevel${level}.json`);
         this.projectiles=[];
         this.collectibles=[];
         this.wList=getAsset("weapons.png");
         this.hb=getAsset("hb.png");
+        this.bg=getAsset(`level${level}bg.png`);
+        this.bgscaler=(this.bg.height>2*world.height)?2:1;
         this.enemies=[];
-        for(let _=100;_<2300;_+=2300/10){
+        for(let _=100;_<world.tileWidth*this.ground.totalWidth-100;_+=100+randomInt(-20,20)){
             this.collectibles.push(new Collectible(randomInt(1,12),_+randomInt(-50,50),0));
         }
         this.populateEnemies();
@@ -39,7 +43,8 @@ class Game{
     }
     render()
     {
-        display.fillBackground("rgba(255,255,255,1)");
+        display.drawSprite(this.bg,scale(world.cameraX,0,world.tileWidth*this.ground.totalWidth-world.width,0,this.bg.width-display.buffer.canvas.width),0,display.buffer.canvas.width,display.buffer.canvas.height*this.bgscaler,0,0,display.buffer.canvas.width,display.buffer.canvas.height);
+        // display.fillBackground("rgba(255,255,255,1)");
         this.ground.render();
         this.onScreen(this.collectibles).forEach(collectible=>{
             display.drawSpriteFrame(collectible,collectible.animator.getRenderFrame());
@@ -88,6 +93,8 @@ class Game{
                 if(rectsCollide(enemy.getHitBox(),proj.getAttackBox())&&enemy!==this.dan)
                 {
                     enemy.health-=proj.damage;
+                    enemy.facingRight=proj.velX<0;
+                    enemy.kickHit();
                     proj.die();
                 }
             });
@@ -135,14 +142,18 @@ class Game{
         if(this.dan.x-this.dan.width/2<0){
             this.dan.x=this.dan.width
         }
+        if(this.dan.health<0)
+        {
+            this.gameOver();
+        }
         if(this.dan.y-this.dan.height/2>world.height-5)
         {
-            gameOver();
+            this.gameOver();
         }
         if(this.dan.x+this.dan.width/2>world.tileWidth*this.ground.totalWidth)
         {
             if(this.enemies.length===0){
-                levelComplte();
+                this.levelComplte();
             }
             else{
                 this.dan.y=world.width;
@@ -155,16 +166,21 @@ class Game{
     }
 
     levelComplte(){
-    
+        localStorage.setItem("daringDan-cleared",this.level+1);
+        this.playing=false;
+        game=new Menu("Next",false);
+        controller.paused=true;
     }
 
     gameOver(){
-    
+        this.playing=false;
+        game=new Menu("GAME OVER",false);
+        controller.paused=true;
     }
 
     nextFrame()
     {
-        setTimeout(requestAnimationFrame.bind(null,this.nextFrame.bind(this)),1000/30);
+        if(this.playing)setTimeout(requestAnimationFrame.bind(null,this.nextFrame.bind(this)),1000/30);
         this.update();
         this.render();
     }

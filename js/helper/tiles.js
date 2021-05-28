@@ -10,7 +10,7 @@ class Tiles{
         let data=getAsset(filePath);
             this.totalHeight=data.height;
             this.totalWidth=data.width;
-            let tileIndex=(data.layers[0].name.includes("enemy"))?1:0;
+            let tileIndex=(data.layers[0].name.includes("enem"))?1:0;
             this.map=Array.from(data.layers[tileIndex].data);
             data.layers[1-tileIndex].data.forEach((item,index)=>{
                 if(item!==0){

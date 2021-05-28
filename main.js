@@ -8,12 +8,11 @@ let menu;
 function init(){
     if(incomplete_assets>0){
         setTimeout(init,333);
-        if(menu===undefined)menu=new Menu();
+        if(menu===undefined)menu=new Splash();
     }else
     {
         menu.quit();
-        game =new Game();
-        controller=new Controller(game.dan);
+        game =new Menu();
     }
 }
 init();

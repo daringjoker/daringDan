@@ -12,3 +12,8 @@
     height:100vh;
     background:#c9c9c9;
 }
+
+@font-face {
+    font-family: lowpixel;
+    src: url("../assets/font1.ttf");
+  }
