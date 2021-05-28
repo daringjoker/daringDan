@@ -16,7 +16,7 @@ class Controller{
                 case "ArrowRight":
                     this.dan.moveRight();
                     break;
-                case "d":
+                case "w":
                 case "ArrowUp":
                     this.dan.jump();
                     break;
@@ -45,6 +45,8 @@ class Controller{
     handleKeyUp(e){
         if(!this.paused){
             switch(e.key){
+                case "a":
+                case"d":
                 case "ArrowLeft":
                 case "ArrowRight":
                     this.dan.stopRunning();
