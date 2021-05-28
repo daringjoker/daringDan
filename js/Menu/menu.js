@@ -58,11 +58,11 @@ class Menu{
                     let startY =0.6;
                     display.drawText("Select Level",0.5,startY-0.12,"lowpixel",35,"yellow","brown",1,"center");
                     this.gameMenuOptions[this.currentScreen].forEach((opt,ind)=>{
-                        if(this.currentOption==ind&&ind<=this.clearedLevels)
+                        if(this.currentOption==ind&&ind<=this.clearedLevels+1)
                         display.drawText(opt,startX,startY,"lowpixel",this.selectedSize,this.selectedColor,this.selectedStroke,1,"start");
-                        else if(this.currentOption==ind&&ind>this.clearedLevels)
+                        else if(this.currentOption==ind&&ind>this.clearedLevels+1)
                         display.drawText(opt,startX,startY,"lowpixel",this.selectedSize,"#888","#333",1,"start");
-                        else if(ind>this.clearedLevels)
+                        else if(ind>this.clearedLevels+1)
                         display.drawText(opt,startX,startY,"lowpixel",this.defaultSize,"#888","#333",1,"start");
                         else
                         display.drawText(opt,startX,startY,"lowpixel",this.defaultSize,this.defaultColor,this.defaultStroke,1,"start");
@@ -139,7 +139,7 @@ class Menu{
                 }
             case "levels":
                 {
-                    if(this.clearedLevels<this.currentOption){
+                    if(this.clearedLevels<this.currentOption-1){
                         //play something later
                     }else{
                         cancelAnimationFrame(this.frameref);
