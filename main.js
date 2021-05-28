@@ -11,7 +11,7 @@ function init(){
         if(menu===undefined)menu=new Splash();
     }else
     {
-        menu.quit();
+        if(menu)menu.quit();
         game =new Menu();
     }
 }

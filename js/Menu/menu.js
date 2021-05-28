@@ -1,9 +1,9 @@
 class Menu{
     constructor(msg="",initial=true){
         this.msg=msg;
-        if(this.msg=="GAME OVER")
+        if(this.msg==="GAME OVER")
         this.firstMenu="RETRY"
-        else if (this.msg="Next")
+        else if (this.msg==="Next")
         this.firstMenu="Play Next Level"
         else
         this.firstMenu="New Game";
@@ -98,6 +98,7 @@ class Menu{
     }
     quit(){
         cancelAnimationFrame(this.frameref);
+        removeEventListener("keydown",this.handleKey.bind(this));
         this.finished=true;
     }
     nextFrame(){
@@ -115,9 +116,9 @@ class Menu{
                     {
                         case 0:{
                             cancelAnimationFrame(this.frameref);
-                            game=new Game((this.clearedLevels+1)%this.gameMenuOptions["levels"].length);
-                            removeEventListener("keydown",this.handleKey);
+                            if(!game.playing)game=new Game((this.clearedLevels+1)%this.gameMenuOptions["levels"].length);
                             controller=new Controller(game.dan);
+                            this.quit();
                             break;
                         }
                         case 1:{
@@ -142,9 +143,9 @@ class Menu{
                         //play something later
                     }else{
                         cancelAnimationFrame(this.frameref);
-                        game=new Game(this.currentOption);
-                        removeEventListener("keydown",this.handleKey);
+                        if(!game.playing)game=new Game(this.currentOption);
                         controller=new Controller(game.dan);
+                        this.quit();
                     }
                     break;
                 }
@@ -156,44 +157,45 @@ class Menu{
         }
     }
     handleKey(e){
-        console.log(e.key);
-        switch(e.key){
-            case "ArrowUp":
-                this.currentOption--;
-                if(this.currentOption<0)this.currentOption=this.gameMenuOptions[this.currentScreen].length-1;
-                break;
-            
-            case "ArrowRight":
-                if(this.currentScreen==="levels")
-                {
-                    this.currentOption=(this.currentOption+4)%this.gameMenuOptions[this.currentScreen].length;
-                }
-                break;
+        if(!this.finished){
+            switch(e.key){
+                case "ArrowUp":
+                    this.currentOption--;
+                    if(this.currentOption<0)this.currentOption=this.gameMenuOptions[this.currentScreen].length-1;
+                    break;
+                
+                case "ArrowRight":
+                    if(this.currentScreen==="levels")
+                    {
+                        this.currentOption=(this.currentOption+4)%this.gameMenuOptions[this.currentScreen].length;
+                    }
+                    break;
 
-            case "ArrowLeft":
-                if(this.currentScreen==="levels")
-                {
-                    this.currentOption=(this.gameMenuOptions[this.currentScreen].length+this.currentOption-4)%this.gameMenuOptions[this.currentScreen].length;
-                }
-                break;
+                case "ArrowLeft":
+                    if(this.currentScreen==="levels")
+                    {
+                        this.currentOption=(this.gameMenuOptions[this.currentScreen].length+this.currentOption-4)%this.gameMenuOptions[this.currentScreen].length;
+                    }
+                    break;
+                
+                case "ArrowDown":
+                    this.currentOption++;
+                    if(this.currentOption>this.gameMenuOptions[this.currentScreen].length-1)this.currentOption=0;
+                    break;
             
-            case "ArrowDown":
-                this.currentOption++;
-                if(this.currentOption>this.gameMenuOptions[this.currentScreen].length-1)this.currentOption=0;
-                break;
-           
-            case "Enter":
-                this.selectOption()
-                break;
+                case "Enter":
+                    this.selectOption()
+                    break;
 
-            case "Backspace":
-                this.currentScreen=this.history.pop()||"main";
-                this.currentOption=0;
-                break;
-            case "Escape":
-                this.currentScreen="main";
-                this.currentOption=0;
-                break;
+                case "Backspace":
+                    this.currentScreen=this.history.pop()||"main";
+                    this.currentOption=0;
+                    break;
+                case "Escape":
+                    this.currentScreen="main";
+                    this.currentOption=0;
+                    break;
+            }
         }
     }
 }

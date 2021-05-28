@@ -150,14 +150,13 @@ class Game{
         {
             this.gameOver();
         }
-        if(this.dan.x+this.dan.width/2>world.tileWidth*this.ground.totalWidth)
+        if(this.enemies.length==0&&this.dan.x+this.dan.width/2>world.tileWidth*(this.ground.totalWidth-1)){
+            console.log("must have completed");
+            this.levelComplte();
+        }
+        if(this.dan.x+this.dan.width/2>world.tileWidth*this.ground.totalWidth&&this.enemies.length!==0)
         {
-            if(this.enemies.length===0){
-                this.levelComplte();
-            }
-            else{
-                this.dan.y=world.width;
-            }
+                this.dan.y=world.width-this.dan.width/2;
         }
         let determiner=this.dan.x-world.width/2;
         if(determiner<0)world.cameraX=0;
@@ -166,8 +165,11 @@ class Game{
     }
 
     levelComplte(){
-        localStorage.setItem("daringDan-cleared",this.level+1);
+        console.log("i am trying",this.playing)
+        if(parseInt(localStorage.getItem("daringDan-cleared")||0)<this.level)
+        localStorage.setItem("daringDan-cleared",this.level);
         this.playing=false;
+        game.playing=false;
         game=new Menu("Next",false);
         controller.paused=true;
     }

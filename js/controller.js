@@ -6,7 +6,6 @@ class Controller{
         document.addEventListener("keyup",this.handleKeyUp.bind(this));
     }
     handleKeyDown(e){
-        console.log(e.key);
         if(!this.paused){
             switch(e.key){
                 case "a":
