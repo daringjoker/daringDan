@@ -18,7 +18,7 @@ class Menu{
         this.defaultSize=30;
         this.frameref=null;
         this.bg=getAsset("menubg.png");
-        this.clearedLevels=parseInt(localStorage.getItem("daringDan-cleared")||0);
+        this.clearedLevels=parseInt(localStorage.getItem("daringDan-cleared")||(-1));
         this.history=["main"];
         this.gameMenuOptions={
             main:[this.firstMenu,"Levels","Controls","Settings"],
